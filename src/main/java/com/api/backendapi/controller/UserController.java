@@ -31,10 +31,12 @@ public class UserController {
     @RequestMapping(value = "/api/v1/user/login", method = RequestMethod.POST)
     @ResponseBody
     private ResponseEntity<Object> checkLogin(@RequestBody User user) {
-        if (userService.getUserById(user.getId()) == null) {
+        String username = user.getUsername();
+        String password = user.getPassword();
+        User u = userService.checkLogin(username, password);
+        if (u == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        User u = userService.getUserById(user.getId());
         return new ResponseEntity<>(u, HttpStatus.OK);
     }
 

@@ -23,4 +23,9 @@ public class UserService implements IUserService {
         }
         return false;
     }
+
+    @Override
+    public User checkLogin(String username, String password) {
+        return userRepository.checkLogin(username, password);
+    }
 }
