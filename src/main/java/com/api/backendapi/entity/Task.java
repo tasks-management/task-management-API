@@ -65,5 +65,5 @@ public class Task implements Serializable {
     @Column(name = "last_modified")
     private LocalDate lastModified;
 
-    private enum TaskStatus {DONE, INPROCESS, LATE, SUCCESS, REASSIGN}
+    public enum TaskStatus {DONE, INPROCESS, LATE, SUCCESS, REASSIGN}
 }
