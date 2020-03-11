@@ -1,7 +1,7 @@
 package com.api.backendapi.controller;
 
 import com.api.backendapi.entity.User;
-import com.api.backendapi.service.IUserService;
+import com.api.backendapi.service.iservice.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,13 +40,4 @@ public class UserController {
         return new ResponseEntity<>(u, HttpStatus.OK);
     }
 
-//    @RequestMapping(value = "/api/v1/user/test", method = RequestMethod.GET)
-//    @ResponseBody
-//    private ResponseEntity<Object> test() {
-//        User user = new User();
-//        user.setId(new Long(1));
-//        user.setName("Duong");
-////        user.setAge(50);
-//        return new ResponseEntity<>(user, HttpStatus.OK);
-//    }
 }

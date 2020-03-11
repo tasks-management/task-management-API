@@ -2,6 +2,7 @@ package com.api.backendapi.service;
 
 import com.api.backendapi.entity.User;
 import com.api.backendapi.repository.UserRepository;
+import com.api.backendapi.service.iservice.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.api.backendapi.service;
+package com.api.backendapi.service.iservice;
 
 import com.api.backendapi.entity.User;
 
