@@ -29,9 +29,6 @@ public class User implements Serializable {
     @Column(name = "role")
     private String role;
 
-    @Column(name = "barcode")
-    private String barcode;
-
     @Column(name = "is_active")
     private boolean isActive;
 

@@ -21,7 +21,8 @@ public class Task implements Serializable {
     private String name;
 
     @Column(name = "status")
-    private Enum<TaskStatus> taskStatus;
+    @Enumerated(EnumType.STRING)
+    private TaskStatus taskStatus;
 
     @Column(name = "description", columnDefinition = "NVARCHAR", length = 5000)
     private String description;
@@ -60,6 +61,9 @@ public class Task implements Serializable {
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "handler_id", columnDefinition = "bigint")
     private Long handlerId;
+
+    @Column(name = "last_modified")
+    private LocalDate lastModified;
 
     private enum TaskStatus {DONE, INPROCESS, LATE, SUCCESS, REASSIGN}
 }
