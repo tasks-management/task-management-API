@@ -7,14 +7,13 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-public class CreateAdminDTO implements Serializable {
+public class CreateUserDTO implements Serializable {
 
     private String username;
     private String password;
-    private String teamName;
+    private String teamId;
     private String fullName;
 
-    public CreateAdminDTO() {
+    public CreateUserDTO() {
     }
-
 }

@@ -21,7 +21,7 @@ public class TeamController {
             jsonObject.addProperty("message", "Cannot find without id");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonObject.toString());
         }
-        Team result = teamService.getTeamInfoById(id);
+        Team result = teamService.findTeamByID(id);
         if (result.getName() == null) {
             jsonObject.addProperty("message", "Cannot find that team with that id");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonObject.toString());

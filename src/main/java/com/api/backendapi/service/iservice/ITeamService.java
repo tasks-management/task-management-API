@@ -8,7 +8,7 @@ import java.util.List;
 @Service
 public interface ITeamService {
 
-    Team getTeamInfoById(Long id);
+    Team findTeamByID(Long id);
 
     Team createNewTeam(String teamname);
 

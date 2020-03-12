@@ -15,8 +15,8 @@ public class TeamService implements ITeamService {
     TeamRepository teamRepository;
 
     @Override
-    public Team getTeamInfoById(Long id) {
-        return teamRepository.findTeamInfoById(id);
+    public Team findTeamByID(Long id) {
+        return teamRepository.findById(id).orElse(null);
     }
 
     @Override

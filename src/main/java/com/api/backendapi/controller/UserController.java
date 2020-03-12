@@ -1,6 +1,7 @@
 package com.api.backendapi.controller;
 
 import com.api.backendapi.dtos.CreateAdminDTO;
+import com.api.backendapi.dtos.CreateUserDTO;
 import com.api.backendapi.entity.Task;
 import com.api.backendapi.entity.Team;
 import com.api.backendapi.service.iservice.ITaskService;
@@ -46,6 +47,25 @@ public class UserController {
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
         user.setRole("manager");
+        user.setActive(true);
+        user.setName(dto.getFullName());
+        user.setTeam(team);
+        user = userService.saveUser(user);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/api/v1/user/createUser", method = RequestMethod.POST)
+    @ResponseBody
+    private ResponseEntity<Object> createUser(@RequestBody CreateUserDTO dto) {
+        Team team = teamService.findTeamByID(Long.parseLong(dto.getTeamId()));
+        User user = new User();
+        user.setUsername(dto.getUsername());
+        user.setPassword(dto.getPassword());
+        user.setRole("user");
         user.setActive(true);
         user.setName(dto.getFullName());
         user.setTeam(team);
