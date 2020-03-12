@@ -13,16 +13,12 @@ public class UserService implements IUserService {
 
     @Override
     public User getUserById(Long id) {
-        return userRepository.getOne(id);
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
-    public boolean saveUser(User user) {
-        user = userRepository.save(user);
-        if (user != null) {
-            return true;
-        }
-        return false;
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 
     @Override

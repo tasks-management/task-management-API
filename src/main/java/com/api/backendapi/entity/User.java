@@ -34,5 +34,5 @@ public class User implements Serializable {
 
     @ManyToOne(targetEntity = Team.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id")
-    private Team teamOwner;
+    private Team team;
 }

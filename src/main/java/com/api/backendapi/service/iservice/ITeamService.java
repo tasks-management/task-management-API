@@ -10,7 +10,7 @@ public interface ITeamService {
 
     Team getTeamInfoById(Long id);
 
-    Team createNewTeam(Team team);
+    Team createNewTeam(String teamname);
 
     List<Team> getAllTeam();
 }

@@ -1,7 +1,10 @@
 package com.api.backendapi.controller;
 
+import com.api.backendapi.dtos.CreateAdminDTO;
 import com.api.backendapi.entity.Task;
+import com.api.backendapi.entity.Team;
 import com.api.backendapi.service.iservice.ITaskService;
+import com.api.backendapi.service.iservice.ITeamService;
 import com.google.gson.JsonObject;
 import com.api.backendapi.entity.User;
 import com.api.backendapi.service.iservice.IUserService;
@@ -17,25 +20,57 @@ import java.util.List;
 public class UserController {
 
     @Autowired
+    ITeamService teamService;
+
+    @Autowired
     ITaskService taskService;
 
     @Autowired
     IUserService userService;
 
-    @RequestMapping(value = "/api/v1/user/createAdmin", method = RequestMethod.GET)
     @ResponseBody
-    private ResponseEntity<Object> createAdmin() {
-        User user = new User();
-        user.setName("Admin");
-        user.setActive(true);
-        user.setRole("admin");
-        user.setUsername("admin");
-        user.setPassword("password");
-        if (userService.saveUser(user) == false) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @RequestMapping(value = "/api/v1/user/{id:\\d+}", method = RequestMethod.GET)
+    public ResponseEntity<Object> getUserInformation(@PathVariable("id") Long userId) {
+        if (userId == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+        User user = userService.getUserById(userId);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/api/v1/user/createManager", method = RequestMethod.POST)
+    @ResponseBody
+    private ResponseEntity<Object> createManager(@RequestBody CreateAdminDTO dto) {
+        Team team = teamService.createNewTeam(dto.getTeamName());
+        User user = new User();
+        user.setUsername(dto.getUsername());
+        user.setPassword(dto.getPassword());
+        user.setRole("manager");
+        user.setActive(true);
+        user.setName(dto.getFullName());
+        user.setTeam(team);
+        user = userService.saveUser(user);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+    }
+
+//    @RequestMapping(value = "/api/v1/user/createAdmin", method = RequestMethod.GET)
+//    @ResponseBody
+//    private ResponseEntity<Object> createAdmin() {
+//        User user = new User();
+//        user.setName("Admin");
+//        user.setActive(true);
+//        user.setRole("admin");
+//        user.setUsername("admin");
+//        user.setPassword("password");
+//        if (userService.saveUser(user) == false) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//        return new ResponseEntity<>(user, HttpStatus.OK);
+//    }
 
     @RequestMapping(value = "/api/v1/user/login", method = RequestMethod.POST)
     @ResponseBody
@@ -52,9 +87,9 @@ public class UserController {
     @ResponseBody
     @RequestMapping(value = "/api/v1/user/create", method = RequestMethod.POST)
     public ResponseEntity<Object> createNewUser(@RequestBody User user) {
-        Boolean result = userService.saveUser(user);
+        User u = userService.saveUser(user);
         JsonObject jsonObject = new JsonObject();
-        if (!result) {
+        if (u == null) {
             jsonObject.addProperty("message", "Create failed");
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(jsonObject.toString());
         }

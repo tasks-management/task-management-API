@@ -20,7 +20,9 @@ public class TeamService implements ITeamService {
     }
 
     @Override
-    public Team createNewTeam(Team team) {
+    public Team createNewTeam(String teamname) {
+        Team team = new Team();
+        team.setName(teamname);
         return teamRepository.save(team);
     }
 

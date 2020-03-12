@@ -30,18 +30,18 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.OK).body(jsonObject.toString());
     }
 
-    @RequestMapping(value = "/api/v1/team/create", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Object> createNewTeam(@RequestBody Team team) {
-        Team result = teamService.createNewTeam(team);
-        JsonObject jsonObject = new JsonObject();
-        if (result.getId() == null) {
-            jsonObject.addProperty("id", new Long(0));
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(jsonObject.toString());
-        } else {
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-    }
+//    @RequestMapping(value = "/api/v1/team/create", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResponseEntity<Object> createNewTeam(@RequestBody Team team) {
+//        Team result = teamService.createNewTeam(team);
+//        JsonObject jsonObject = new JsonObject();
+//        if (result.getId() == null) {
+//            jsonObject.addProperty("id", new Long(0));
+//            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(jsonObject.toString());
+//        } else {
+//            return new ResponseEntity<>(result, HttpStatus.OK);
+//        }
+//    }
 
     @RequestMapping(value = "/api/v1/team/teams", method = RequestMethod.GET)
     @ResponseBody
