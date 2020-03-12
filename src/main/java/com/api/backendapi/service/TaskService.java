@@ -21,9 +21,10 @@ public class TaskService implements ITaskService {
         return taskRepository.getHistoryTask(id);
     }
 
+    // NOTE
     @Override
-    public List<Task> getTaskListFromUserId(Long id) {
-        return taskRepository.getTaskListFromUserId(id);
+    public List<Task> getInProgressTaskByUserId(Long id) {
+        return taskRepository.getInProgressTaskByUserId(id);
     }
 
     @Override
@@ -40,4 +41,6 @@ public class TaskService implements ITaskService {
     public List<Task> getHistoryByUserId(Long id, Date startDate, Date endDate, String status) {
         return taskRepository.getHistoryByUserId(id, status, startDate, endDate);
     }
+
+
 }

@@ -24,10 +24,10 @@ public class Task implements Serializable {
     @Column(name = "status")
     private String taskStatus;
 
-    @Column(name = "description", columnDefinition = "NVARCHAR", length = 5000)
+    @Column(name = "description", columnDefinition = "NVARCHAR(5000)")
     private String description;
 
-    @Column(name = "process_content", columnDefinition = "NVARCHAR", length = 5000)
+    @Column(name = "process_content", columnDefinition = "NVARCHAR(5000)")
     private String contentProcess;
 
     @Column(name = "start_date")
@@ -39,7 +39,7 @@ public class Task implements Serializable {
     @Column(name = "time_comment")
     private Date timeComment;
 
-    @Column(name = "comment_content", columnDefinition = "NVARCHAR", length = 2000)
+    @Column(name = "comment_content", columnDefinition = "NVARCHAR(2000)")
     private String commentContent;
 
     @Column(name = "rate")
@@ -54,9 +54,6 @@ public class Task implements Serializable {
 
     @Column(name = "image", columnDefinition = "NVARCHAR(100)")
     private String image;
-
-    @Column(name = "source_handler", columnDefinition = "NVARCHAR(100)")
-    private String sourceHandler;
 
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "handler_id", columnDefinition = "bigint")

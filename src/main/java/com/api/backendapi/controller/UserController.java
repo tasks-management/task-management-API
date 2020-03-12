@@ -15,8 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -32,6 +32,18 @@ public class UserController {
 
     @Autowired
     IUserService userService;
+
+    @ResponseBody
+    @RequestMapping(value = "/api/v1/user/{id:\\d+}/task=InProgress", method = RequestMethod.GET)
+    public ResponseEntity<Object> getAllInProgressTasksByUserID(@PathVariable("id") Long userId) {
+        JsonObject jsonObject = new JsonObject();
+        List<Task> result = taskService.getInProgressTaskByUserId(userId);
+        if (result.size() == 0) {
+            jsonObject.addProperty("message", "Don't have any task yet");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonObject.toString());
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     @ResponseBody
     @RequestMapping(value = "/api/v1/user/{id:\\d+}", method = RequestMethod.GET)

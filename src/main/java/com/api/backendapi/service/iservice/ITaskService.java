@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface ITaskService {
 
-    List<Task> getTaskListFromUserId(Long id);
+    List<Task> getInProgressTaskByUserId(Long id);
 
     List<Task> getHistoryTask(Long id);
 
@@ -18,4 +18,5 @@ public interface ITaskService {
     List<Task> getHistoryByStatus(Long id, String status);
 
     List<Task> getHistoryByUserId(Long id, Date startDate, Date endDate, String status);
+
 }
