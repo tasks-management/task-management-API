@@ -14,8 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 @RestController
 public class UserController {
@@ -119,78 +123,141 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/api/v1/user/{id:\\d+}/task/history", method = RequestMethod.GET)
-    public ResponseEntity<Object> getHistoryTask(@PathVariable("id") Long userId) {
+    public ResponseEntity<Object> getHistoryTask(@RequestParam(value = "start", required = false) String start,
+                                                 @RequestParam(value = "end", required = false) String end,
+                                                 @PathVariable("id") Long userId,
+                                                 @RequestParam(value = "status", required = false) String status) {
         if (userId == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        List<Task> result = taskService.getHistoryTask(userId);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        if (start != null && end != null){
+            Date startDate, endDate;
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+            try {
+                startDate = sdf.parse(start);
+                endDate = sdf.parse(end);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            if (status != null) {
+                List<Task> result = taskService.getHistoryByUserId(userId, startDate, endDate, status);
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            } else {
+                List<Task> result = taskService.getHistoryByDate(userId, startDate, endDate);
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            }
+        } else{
+            if (status != null) {
+                List<Task> result = taskService.getHistoryByStatus(userId, status);
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            } else {
+                List<Task> result = taskService.getHistoryTask(userId);
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            }
+        }
     }
 
 
+//    @ResponseBody
+//    @RequestMapping(value = "/api/v1/user/{id:\\d+}/history/date", method = RequestMethod.GET)
+//    public ResponseEntity<Object> getHistoryByDate(@RequestParam("start") String start,
+//                                                   @RequestParam("end") String end,
+//                                                   @PathVariable("id") Long userId) {
+//        JsonObject jsonObject = new JsonObject();
+//        Date startDate, endDate;
+//        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+//        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+//        try {
+//            startDate = sdf.parse(start);
+//            endDate = sdf.parse(end);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
+//        }
+//        if (userId == null) {
+//            jsonObject.addProperty("message", "User id cannot be null");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
+//        }
+//        if (start == null) {
+//            jsonObject.addProperty("message", "Start date cannot be null");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
+//        }
+//        if (end == null) {
+//            jsonObject.addProperty("message", "End date cannot be null");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
+//        }
+//        List<Task> result = taskService.getHistoryByDate(userId, startDate, endDate);
+//        return new ResponseEntity<>(result, HttpStatus.OK);
+//    }
+
+//    @ResponseBody
+//    @RequestMapping(value = "/api/v1/user/{id:\\d+}/history/status", method = RequestMethod.GET)
+//    public ResponseEntity<Object> getHistoryByStatus(@RequestParam("status") String status,
+//                                                     @PathVariable("id") Long userId) {
+//        JsonObject jsonObject = new JsonObject();
+//        if (userId == null) {
+//            jsonObject.addProperty("message", "User id cannot be null");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
+//        }
+//        if (status == null) {
+//            jsonObject.addProperty("message", "Status cannot be null");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
+//        }
+
+//        return new ResponseEntity<>(result, HttpStatus.OK);
+//    }
+
+//    @ResponseBody
+//    @RequestMapping(value = "/api/v1/user/{id:\\d+}/history", method = RequestMethod.GET)
+//    public ResponseEntity<Object> getHistoryByUserId(@RequestParam("start") String start,
+//                                                     @RequestParam("end") String end,
+//                                                     @PathVariable("id") Long userId,
+//                                                     @RequestParam("status") String status) {
+//        JsonObject jsonObject = new JsonObject();
+//        Date startDate, endDate;
+//        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+//        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+//        try {
+//            startDate = sdf.parse(start);
+//            endDate = sdf.parse(end);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
+//        }
+//        if (userId == null) {
+//            jsonObject.addProperty("message", "User id cannot be null");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
+//        }
+//        if (start == null) {
+//            jsonObject.addProperty("message", "Start date cannot be null");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
+//        }
+//        if (end == null) {
+//            jsonObject.addProperty("message", "End date cannot be null");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
+//        }
+//        if (status == null) {
+//            jsonObject.addProperty("message", "Status cannot be null");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
+//        }
+//        List<Task> result = taskService.getHistoryByUserId(userId, startDate, endDate, status);
+//        return new ResponseEntity<>(result, HttpStatus.OK);
+//    }
+
     @ResponseBody
-    @RequestMapping(value = "/api/v1/user/{id:\\d+}/history/date", method = RequestMethod.GET)
-    public ResponseEntity<Object> getHistoryByDate(@RequestParam("start") LocalDate start,
-                                                   @RequestParam("end") LocalDate end,
-                                                   @PathVariable("id") Long userId) {
-        JsonObject jsonObject = new JsonObject();
-        if (userId == null) {
-            jsonObject.addProperty("message", "User id cannot be null");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
-        }
-        if (start == null) {
-            jsonObject.addProperty("message", "Start date cannot be null");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
-        }
-        if (end == null) {
-            jsonObject.addProperty("message", "End date cannot be null");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
-        }
-        List<Task> result = taskService.getHistoryByDate(userId, start, end);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    @RequestMapping(value = "/api/v1/user/managers", method = RequestMethod.GET)
+    public ResponseEntity<Object> getAllManagerUser() {
+        return new ResponseEntity<>(userService.getAllManagerUser(), HttpStatus.OK);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/api/v1/user/{id:\\d+}/history/status", method = RequestMethod.GET)
-    public ResponseEntity<Object> getHistoryByStatus(@RequestParam("status") Task.TaskStatus status,
-                                                     @PathVariable("id") Long userId) {
-        JsonObject jsonObject = new JsonObject();
-        if (userId == null) {
-            jsonObject.addProperty("message", "User id cannot be null");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
+    @RequestMapping(value = "/api/v1/user/{id:\\d+}/users", method = RequestMethod.GET)
+    public ResponseEntity<Object> getAllUserInTeam(@PathVariable("id") Long teamId) {
+        if (teamId == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        if (status == null) {
-            jsonObject.addProperty("message", "Status cannot be null");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
-        }
-        List<Task> result = taskService.getHistoryByStatus(userId, status);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/api/v1/user/{id:\\d+}/history", method = RequestMethod.GET)
-    public ResponseEntity<Object> getHistoryByUserId(@RequestParam("start") LocalDate start,
-                                                     @RequestParam("end") LocalDate end,
-                                                     @PathVariable("id") Long userId,
-                                                     @RequestParam("status") Task.TaskStatus status) {
-        JsonObject jsonObject = new JsonObject();
-        if (userId == null) {
-            jsonObject.addProperty("message", "User id cannot be null");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
-        }
-        if (start == null) {
-            jsonObject.addProperty("message", "Start date cannot be null");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
-        }
-        if (end == null) {
-            jsonObject.addProperty("message", "End date cannot be null");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
-        }
-        if (status == null) {
-            jsonObject.addProperty("message", "Status cannot be null");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
-        }
-        List<Task> result = taskService.getHistoryByUserId(userId, start, end, status);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(userService.getAllUserInTeam(teamId), HttpStatus.OK);
     }
 }

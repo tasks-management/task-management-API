@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,19 +27,17 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public List<Task> getHistoryByDate(Long id, LocalDate start, LocalDate end) {
+    public List<Task> getHistoryByDate(Long id, Date start, Date end) {
         return taskRepository.getHistoryTaskByDate(id, start, end);
     }
 
     @Override
-    public List<Task> getHistoryByStatus(Long id, Task.TaskStatus status) {
-        String taskStatus = status.toString();
-        return taskRepository.getHistoryByStatus(id, taskStatus);
+    public List<Task> getHistoryByStatus(Long id, String status) {
+        return taskRepository.getHistoryByStatus(id, status);
     }
 
     @Override
-    public List<Task> getHistoryByUserId(Long id, LocalDate startDate, LocalDate endDate, Task.TaskStatus status) {
-        String taskStatus = status.toString();
-        return taskRepository.getHistoryByUserId(id, taskStatus, startDate, endDate);
+    public List<Task> getHistoryByUserId(Long id, Date startDate, Date endDate, String status) {
+        return taskRepository.getHistoryByUserId(id, status, startDate, endDate);
     }
 }

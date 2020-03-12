@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "tbl_tasks")
@@ -21,8 +22,7 @@ public class Task implements Serializable {
     private String name;
 
     @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private TaskStatus taskStatus;
+    private String taskStatus;
 
     @Column(name = "description", columnDefinition = "NVARCHAR", length = 5000)
     private String description;
@@ -31,13 +31,13 @@ public class Task implements Serializable {
     private String contentProcess;
 
     @Column(name = "start_date")
-    private LocalDate startDate;
+    private Date startDate;
 
     @Column(name = "end_date")
-    private LocalDate endDate;
+    private Date endDate;
 
     @Column(name = "time_comment")
-    private LocalDate timeComment;
+    private Date timeComment;
 
     @Column(name = "comment_content", columnDefinition = "NVARCHAR", length = 2000)
     private String commentContent;
@@ -46,7 +46,7 @@ public class Task implements Serializable {
     private float rate;
 
     @Column(name = "created")
-    private LocalDate created;
+    private Date created;
 
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "creator_id", columnDefinition = "bigint")
@@ -60,10 +60,9 @@ public class Task implements Serializable {
 
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "handler_id", columnDefinition = "bigint")
-    private Long handlerId;
+    private User handlerId;
 
     @Column(name = "last_modified")
-    private LocalDate lastModified;
+    private Date lastModified;
 
-    public enum TaskStatus {DONE, INPROCESS, LATE, SUCCESS, REASSIGN}
 }

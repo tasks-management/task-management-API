@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -23,8 +24,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             " AND t.start_date >= :start AND t.end_date <= :end" +
             " AND (t.status = 'DONE' OR t.status = 'FAIL')", nativeQuery = true)
     List<Task> getHistoryTaskByDate(@Param("id") Long id,
-                                    @Param("start") LocalDate startDate,
-                                    @Param("end") LocalDate endDate);
+                                    @Param("start") Date startDate,
+                                    @Param("end") Date endDate);
 
     @Query(value = "SELECT t.* FROM tbl_tasks t WHERE t.handler_id = :id" +
             " AND t.status = :status" , nativeQuery = true)
@@ -36,6 +37,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             " AND t.start_date >= :start AND t.end_date <= :end ", nativeQuery = true)
     List<Task> getHistoryByUserId(@Param("id") Long id,
                                   @Param("status") String status,
-                                  @Param("start") LocalDate startDate,
-                                  @Param("end") LocalDate endDate);
+                                  @Param("start") Date startDate,
+                                  @Param("end") Date endDate);
+
 }

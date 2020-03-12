@@ -6,6 +6,8 @@ import com.api.backendapi.service.iservice.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService implements IUserService {
     @Autowired
@@ -24,5 +26,15 @@ public class UserService implements IUserService {
     @Override
     public User checkLogin(String username, String password) {
         return userRepository.checkLogin(username, password);
+    }
+
+    @Override
+    public List<User> getAllManagerUser() {
+        return userRepository.getAllManagerUser();
+    }
+
+    @Override
+    public List<User> getAllUserInTeam(Long teamId) {
+        return userRepository.getAllUserInTeam(teamId);
     }
 }
