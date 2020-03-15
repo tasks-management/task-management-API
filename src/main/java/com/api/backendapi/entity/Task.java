@@ -18,33 +18,37 @@ public class Task implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @Column(name = "name", columnDefinition = "NVARCHAR(100)")
+    @Column(name = "name")
     private String name;
 
     @Column(name = "status")
     private String taskStatus;
 
-    @Column(name = "description", columnDefinition = "NVARCHAR(5000)")
+    @Column(name = "description")
     private String description;
 
-    @Column(name = "process_content", columnDefinition = "NVARCHAR(5000)")
+    @Column(name = "process_content")
     private String contentProcess;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "start_date")
     private Date startDate;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "end_date")
     private Date endDate;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "time_comment")
     private Date timeComment;
 
-    @Column(name = "comment_content", columnDefinition = "NVARCHAR(2000)")
+    @Column(name = "comment_content")
     private String commentContent;
 
     @Column(name = "rate")
     private float rate;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "created")
     private Date created;
 
@@ -52,13 +56,14 @@ public class Task implements Serializable {
     @JoinColumn(name = "creator_id", columnDefinition = "bigint")
     private User creatorId;
 
-    @Column(name = "image", columnDefinition = "NVARCHAR(100)")
+    @Column(name = "image")
     private String image;
 
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "handler_id", columnDefinition = "bigint")
     private User handlerId;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "last_modified")
     private Date lastModified;
 
