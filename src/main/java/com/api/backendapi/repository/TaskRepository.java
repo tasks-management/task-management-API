@@ -13,16 +13,15 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    @Query(value = "SELECT * FROM tbl_tasks t WHERE t.handler_id = :id AND t.status = 'INPROGRESS'", nativeQuery = true)
-    List<Task> getTaskListFromUserId(@Param("id") Long id);
-
+    @Query(value = "SELECT * FROM tbl_tasks t WHERE t.handler_id = :id AND t.status = 'IN PROGRESS'", nativeQuery = true)
+    List<Task> getInProgressTaskByUserId(@Param("id") Long id);
 
     @Query(value = "SELECT t.* FROM tbl_tasks t WHERE t.handler_id = :id AND (t.status = 'SUCCEED' OR t.status = 'FAIL')", nativeQuery = true)
     List<Task> getHistoryTask(@Param("id") Long id);
 
     @Query(value = "SELECT t.* FROM tbl_tasks t WHERE t.handler_id = :id" +
             " AND t.start_date >= :start AND t.end_date <= :end" +
-            " AND (t.status = 'SUCCEED' OR t.status = 'FAIL')", nativeQuery = true)
+            " AND (t.status = 'SUBMITTED' OR t.status = 'FAIL' OR t.status = 'SUCCEED')", nativeQuery = true)
     List<Task> getHistoryTaskByDate(@Param("id") Long id,
                                     @Param("start") Date startDate,
                                     @Param("end") Date endDate);

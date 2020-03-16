@@ -32,12 +32,12 @@ public class TaskController {
         JsonObject jsonObject = new JsonObject();
         if (userId == null) {
             jsonObject.addProperty("message", "Cannot find task list from that user");
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(jsonObject.toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
         }
-        List<Task> result = taskService.getTaskListFromUserId(userId);
+        List<Task> result = taskService.getInProgressTaskByUserId(userId);
         if (result.size() == 0) {
             jsonObject.addProperty("message", "Don't have any task yet");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonObject.toString());
+            return ResponseEntity.status(HttpStatus.OK).body(jsonObject.toString());
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
