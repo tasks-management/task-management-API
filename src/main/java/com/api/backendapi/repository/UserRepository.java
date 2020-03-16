@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -18,6 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> getAllManagerUser();
 
     @Query(value = "SELECT u.* FROM tbl_users u WHERE u.role = 'user' AND u.team_id = " +
-            "(SELECT u2.team_id FROM tbl_users u2 WHERE u2.team_id = :teamId AND u2.role = 'manager')", nativeQuery = true)
-    List<User> getAllUserInTeam(Long teamId);
+            "(SELECT u2.team_id FROM tbl_users u2 WHERE u2.id = :userId AND u2.role = 'manager')", nativeQuery = true)
+    List<User> getAllUserInTeam(@Param("userId") Long teamId);
 }

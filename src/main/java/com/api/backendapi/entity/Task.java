@@ -55,9 +55,6 @@ public class Task implements Serializable {
     @Column(name = "image", columnDefinition = "NVARCHAR(100)")
     private String image;
 
-    @Column(name = "source_handler", columnDefinition = "NVARCHAR(100)")
-    private String sourceHandler;
-
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "handler_id", columnDefinition = "bigint")
     private User handlerId;

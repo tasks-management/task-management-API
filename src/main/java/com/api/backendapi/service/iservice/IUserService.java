@@ -14,5 +14,5 @@ public interface IUserService {
 
     List<User> getAllManagerUser();
 
-    List<User> getAllUserInTeam(Long teamId);
+    List<User> getAllUserInTeam(Long userId);
 }

@@ -1,5 +1,6 @@
 package com.api.backendapi.service;
 
+import com.api.backendapi.dtos.CreateTaskDTO;
 import com.api.backendapi.entity.Task;
 import com.api.backendapi.repository.TaskRepository;
 import com.api.backendapi.service.iservice.ITaskService;
@@ -39,5 +40,25 @@ public class TaskService implements ITaskService {
     @Override
     public List<Task> getHistoryByUserId(Long id, Date startDate, Date endDate, String status) {
         return taskRepository.getHistoryByUserId(id, status, startDate, endDate);
+    }
+
+    @Override
+    public Task createNewTask(Task task) {
+        return taskRepository.save(task);
+    }
+
+    @Override
+    public Task getTaskDetail(Long taskId) {
+        return taskRepository.findById(taskId).get();
+    }
+
+    @Override
+    public List<Task> getAllSubmitedTaskForManager(Long userId) {
+        return taskRepository.getAllSubmitedTaskForManager(userId);
+    }
+
+    @Override
+    public List<Task> getAllPendingTaskForManager(Long userId) {
+        return taskRepository.getAllPendingTaskForManager(userId);
     }
 }

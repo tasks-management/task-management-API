@@ -15,10 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 @RestController
@@ -254,10 +252,10 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/api/v1/user/{id:\\d+}/users", method = RequestMethod.GET)
-    public ResponseEntity<Object> getAllUserInTeam(@PathVariable("id") Long teamId) {
-        if (teamId == null) {
+    public ResponseEntity<Object> getAllUserInTeam(@PathVariable("id") Long userId) {
+        if (userId == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(userService.getAllUserInTeam(teamId), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getAllUserInTeam(userId), HttpStatus.OK);
     }
 }

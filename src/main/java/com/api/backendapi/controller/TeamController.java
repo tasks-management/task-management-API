@@ -13,7 +13,7 @@ public class TeamController {
     @Autowired
     ITeamService teamService;
 
-    @RequestMapping(value = "/api/v1/team/{id:\\d+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/team/{id:\\d+}/detail", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Object> getTeamInfoById(@PathVariable("id") Long id) {
         JsonObject jsonObject = new JsonObject();
@@ -26,8 +26,7 @@ public class TeamController {
             jsonObject.addProperty("message", "Cannot find that team with that id");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonObject.toString());
         }
-        jsonObject.addProperty("team_name", result.getName());
-        return ResponseEntity.status(HttpStatus.OK).body(jsonObject.toString());
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 //    @RequestMapping(value = "/api/v1/team/create", method = RequestMethod.POST)

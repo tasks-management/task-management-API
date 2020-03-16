@@ -34,7 +34,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> getAllUserInTeam(Long teamId) {
-        return userRepository.getAllUserInTeam(teamId);
+    public List<User> getAllUserInTeam(Long userId) {
+        return userRepository.getAllUserInTeam(userId);
     }
 }

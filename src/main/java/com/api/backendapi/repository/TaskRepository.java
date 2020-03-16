@@ -17,12 +17,12 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> getTaskListFromUserId(@Param("id") Long id);
 
 
-    @Query(value = "SELECT t.* FROM tbl_tasks t WHERE t.handler_id = :id AND (t.status = 'DONE' OR t.status = 'FAIL')", nativeQuery = true)
+    @Query(value = "SELECT t.* FROM tbl_tasks t WHERE t.handler_id = :id AND (t.status = 'SUCCEED' OR t.status = 'FAIL')", nativeQuery = true)
     List<Task> getHistoryTask(@Param("id") Long id);
 
     @Query(value = "SELECT t.* FROM tbl_tasks t WHERE t.handler_id = :id" +
             " AND t.start_date >= :start AND t.end_date <= :end" +
-            " AND (t.status = 'DONE' OR t.status = 'FAIL')", nativeQuery = true)
+            " AND (t.status = 'SUCCEED' OR t.status = 'FAIL')", nativeQuery = true)
     List<Task> getHistoryTaskByDate(@Param("id") Long id,
                                     @Param("start") Date startDate,
                                     @Param("end") Date endDate);
@@ -40,4 +40,15 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
                                   @Param("start") Date startDate,
                                   @Param("end") Date endDate);
 
+    @Query(value = "SELECT t.* FROM tbl_tasks t WHERE t.status = 'SUBMITTED' AND t.creator_id = :userId", nativeQuery = true)
+    List<Task> getAllSubmitedTaskForManager(@Param("userId") Long userId);
+
+    @Query(value = "SELECT *" +
+            "FROM tbl_tasks t " +
+            "WHERE t.status = 'PENDING' AND t.handler_id IN (SELECT u.id " +
+            "FROM tbl_users u " +
+            "WHERE u.role = 'user' AND u.team_id = (SELECT u.team_id " +
+            "FROM tbl_users u " +
+            "WHERE u.id = :id))", nativeQuery = true)
+    List<Task> getAllPendingTaskForManager(@Param("id") Long userId);
 }
