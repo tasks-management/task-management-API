@@ -2,6 +2,8 @@ package com.api.backendapi.controller;
 
 import com.api.backendapi.dtos.CreateAdminDTO;
 import com.api.backendapi.dtos.CreateUserDTO;
+import com.api.backendapi.dtos.TaskDTO;
+import com.api.backendapi.dtos.mapper.TaskMapper;
 import com.api.backendapi.entity.Task;
 import com.api.backendapi.entity.Team;
 import com.api.backendapi.service.iservice.ITaskService;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.time.LocalDate;
 import java.util.List;
@@ -37,11 +40,15 @@ public class UserController {
     public ResponseEntity<Object> getAllInProgressTasksByUserID(@PathVariable("id") Long userId) {
         JsonObject jsonObject = new JsonObject();
         List<Task> result = taskService.getInProgressTaskByUserId(userId);
+        List<TaskDTO> responseResult = new ArrayList<>();
         if (result.size() == 0) {
             jsonObject.addProperty("message", "Don't have any task yet");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonObject.toString());
         }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        for (Task task: result) {
+            responseResult.add(TaskMapper.mapTaskToTaskDTO(task));
+        }
+        return new ResponseEntity<>(responseResult, HttpStatus.OK);
     }
 
     @ResponseBody

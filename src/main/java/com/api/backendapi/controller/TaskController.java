@@ -65,7 +65,6 @@ public class TaskController {
         if (handler == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        Date createdDate = new Date();
         Task task = new Task();
         task.setName(dto.getName());
         task.setDescription(dto.getDescription());
@@ -73,9 +72,10 @@ public class TaskController {
         task.setTaskStatus(dto.getStatus());
         task.setStartDate(startDate);
         task.setEndDate(endDate);
-        task.setCreated(createdDate);
+        task.setCreated(new Date());
         task.setCreatorId(creator);
         task.setHandlerId(handler);
+        task.setLastModified(new Date());
         Task result = taskService.createNewTask(task);
         if (result == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -106,7 +106,7 @@ public class TaskController {
         List<Task> result = taskService.getAllPendingTaskForManager(userId);
         if (result.size() == 0) {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("message", "Don't have any submitted task");
+            jsonObject.addProperty("message", "Don't have any pending task");
             return ResponseEntity.status(HttpStatus.OK).body(jsonObject.toString());
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -142,12 +142,12 @@ public class TaskController {
     @RequestMapping(value = "/api/v1/task/{id}/acceptOrDecline", method = RequestMethod.PUT)
     public ResponseEntity<Object> acceptOrDeclineUserTask(@PathVariable("id") Long taskId,
                                                 @RequestBody TaskCommentDto dto) {
-        Task taskDto = taskService.getTaskDetail(taskId);
-        taskDto.setCommentContent(dto.getComment());
-        taskDto.setTaskStatus(dto.getStatus());
-        taskDto.setRate(dto.getRate());
-        taskDto.setTimeComment(new Date());
-        Task result = taskService.createNewTask(taskDto);
+        Task task = taskService.getTaskDetail(taskId);
+        task.setCommentContent(dto.getComment());
+        task.setTaskStatus(dto.getStatus());
+        task.setRate(dto.getRate());
+        task.setTimeComment(new Date());
+        Task result = taskService.createNewTask(task);
         if (result == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } else {
