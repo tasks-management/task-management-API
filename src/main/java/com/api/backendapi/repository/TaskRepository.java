@@ -39,7 +39,13 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
                                   @Param("start") Date startDate,
                                   @Param("end") Date endDate);
 
-    @Query(value = "SELECT t.* FROM tbl_tasks t WHERE t.status = 'SUBMITTED' AND t.creator_id = :userId", nativeQuery = true)
+    @Query(value = "SELECT *" +
+            "FROM tbl_tasks t " +
+            "WHERE t.status = 'SUBMITTED' AND t.handler_id IN (SELECT u.id " +
+            "FROM tbl_users u " +
+            "WHERE u.role = 'user' AND u.team_id = (SELECT u.team_id " +
+            "FROM tbl_users u " +
+            "WHERE u.id = :id))", nativeQuery = true)
     List<Task> getAllSubmitedTaskForManager(@Param("userId") Long userId);
 
     @Query(value = "SELECT *" +
