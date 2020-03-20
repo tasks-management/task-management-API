@@ -16,16 +16,18 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query(value = "SELECT * FROM tbl_tasks t WHERE t.handler_id = :id AND t.status = 'IN PROGRESS'", nativeQuery = true)
     List<Task> getInProgressTaskByUserId(@Param("id") Long id);
 
-    @Query(value = "SELECT t.* FROM tbl_tasks t WHERE t.handler_id = :id AND (t.status = 'SUCCEED' OR t.status = 'FAIL')", nativeQuery = true)
+    @Query(value = "SELECT t.* FROM tbl_tasks t WHERE t.handler_id = :id " +
+            "AND (t.status = 'SUBMITTED' OR t.status = 'SUCCEED' OR t.status = 'FAIL' OR t.status = 'REJECT')", nativeQuery = true)
     List<Task> getHistoryTask(@Param("id") Long id);
 
     @Query(value = "SELECT t.* FROM tbl_tasks t WHERE t.handler_id = :id" +
             " AND t.start_date >= :start AND t.end_date <= :end" +
-            " AND (t.status = 'SUBMITTED' OR t.status = 'FAIL' OR t.status = 'SUCCEED')", nativeQuery = true)
+            " AND (t.status = 'SUBMITTED' OR t.status = 'FAIL' OR t.status = 'SUCCEED' OR t.status = 'REJECT')", nativeQuery = true)
     List<Task> getHistoryTaskByDate(@Param("id") Long id,
                                     @Param("start") Date startDate,
                                     @Param("end") Date endDate);
 
+    // Mobile chi cho chon SUBMITTED, FAIL, SUCCEED, REJECT
     @Query(value = "SELECT t.* FROM tbl_tasks t WHERE t.handler_id = :id" +
             " AND t.status = :status" , nativeQuery = true)
     List<Task> getHistoryByStatus(@Param("id") Long id,
@@ -46,7 +48,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "WHERE u.role = 'user' AND u.team_id = (SELECT u.team_id " +
             "FROM tbl_users u " +
             "WHERE u.id = :id))", nativeQuery = true)
-    List<Task> getAllSubmitedTaskForManager(@Param("userId") Long userId);
+    List<Task> getAllSubmitedTaskForManager(@Param("id") Long userId);
 
     @Query(value = "SELECT *" +
             "FROM tbl_tasks t " +

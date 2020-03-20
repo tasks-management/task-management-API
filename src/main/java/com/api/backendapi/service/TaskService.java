@@ -44,12 +44,12 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public Task createNewTask(Task task) {
+    public Task saveTask(Task task) {
         return taskRepository.save(task);
     }
 
     @Override
-    public Task getTaskDetail(Long taskId) {
+    public Task getTaskByTaskID(Long taskId) {
         return taskRepository.findById(taskId).get();
     }
 

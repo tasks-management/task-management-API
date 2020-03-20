@@ -20,9 +20,9 @@ public interface ITaskService {
 
     List<Task> getHistoryByUserId(Long id, Date startDate, Date endDate, String status);
 
-    Task createNewTask(Task task);
+    Task saveTask(Task task);
 
-    Task getTaskDetail(Long taskId);
+    Task getTaskByTaskID(Long taskId);
 
     List<Task> getAllSubmitedTaskForManager(Long userId);
 

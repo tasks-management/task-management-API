@@ -76,7 +76,7 @@ public class TaskController {
         task.setCreatorId(creator);
         task.setHandlerId(handler);
         task.setLastModified(new Date());
-        Task result = taskService.createNewTask(task);
+        Task result = taskService.saveTask(task);
         if (result == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         } else {
@@ -134,20 +134,20 @@ public class TaskController {
 
     @ResponseBody
     @RequestMapping(value = "/api/v1/task/{id}/detail", method = RequestMethod.GET)
-    public ResponseEntity<Object> getTaskDetail(@PathVariable("id") Long taskId) {
-        return new ResponseEntity<>(taskService.getTaskDetail(taskId), HttpStatus.OK);
+    public ResponseEntity<Object> getTaskByTaskID(@PathVariable("id") Long taskId) {
+        return new ResponseEntity<>(taskService.getTaskByTaskID(taskId), HttpStatus.OK);
     }
 
     @ResponseBody
     @RequestMapping(value = "/api/v1/task/{id}/acceptOrDecline", method = RequestMethod.PUT)
     public ResponseEntity<Object> acceptOrDeclineUserTask(@PathVariable("id") Long taskId,
                                                 @RequestBody TaskCommentDto dto) {
-        Task task = taskService.getTaskDetail(taskId);
+        Task task = taskService.getTaskByTaskID(taskId);
         task.setCommentContent(dto.getComment());
         task.setTaskStatus(dto.getStatus());
         task.setRate(dto.getRate());
         task.setTimeComment(new Date());
-        Task result = taskService.createNewTask(task);
+        Task result = taskService.saveTask(task);
         if (result == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } else {
@@ -156,19 +156,20 @@ public class TaskController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/api/v1/task/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/v1/task/status/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> changeTaskStatus(@PathVariable("id") Long taskId,
                                                    @RequestParam("status") String status) {
-        Task task = taskService.getTaskDetail(taskId);
+        Task task = taskService.getTaskByTaskID(taskId);
         if (task == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } else {
             task.setTaskStatus(status);
-            Task result =taskService.createNewTask(task);
+            task.setLastModified(new Date());
+            Task result =taskService.saveTask(task);
             if (result != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(null);
+                return ResponseEntity.status(HttpStatus.OK).body(result);
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
     }
