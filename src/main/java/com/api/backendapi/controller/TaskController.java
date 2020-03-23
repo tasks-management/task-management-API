@@ -1,6 +1,8 @@
 package com.api.backendapi.controller;
 
 import com.api.backendapi.dtos.CreateTaskDTO;
+import com.api.backendapi.dtos.ModifiedTaskDTO;
+import com.api.backendapi.dtos.SubmitTaskDTO;
 import com.api.backendapi.dtos.TaskCommentDto;
 import com.api.backendapi.entity.Task;
 import com.api.backendapi.entity.User;
@@ -12,11 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 @RestController
 public class TaskController {
@@ -151,7 +152,7 @@ public class TaskController {
         if (result == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } else {
-            return ResponseEntity.status(HttpStatus.OK).body(null);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
         }
     }
 
@@ -171,6 +172,83 @@ public class TaskController {
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/api/v1/task/{id}/submit", method = RequestMethod.PUT)
+    public ResponseEntity<Object> submitTaskFromUser(@PathVariable("id") Long taskId,
+                                                     @RequestBody SubmitTaskDTO taskSubmitted) {
+        Task taskSubmitedDetail = taskService.getTaskByTaskID(taskId);
+        String status = taskSubmitted.getStatus();
+        String imageFile = taskSubmitted.getImageBase64String();
+        if (status.length() == 0) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        if (imageFile.length() == 0) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        taskSubmitedDetail.setTaskStatus(status);
+        byte[] imageByte = Base64.getMimeDecoder().decode(imageFile);
+        File userDirectory = new File("images");
+        if (!userDirectory.exists()) {
+            new File("images").mkdir();
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String endDateOfTask = sdf.format(new Date());
+        String filePath = userDirectory.getAbsolutePath() + "\\";
+        String fileName = taskSubmitedDetail.getHandlerId().getUsername() + "_" + taskSubmitedDetail.getId() + "_" + endDateOfTask + ".png";
+        try {
+            File dest = new File(filePath + fileName);
+            FileOutputStream fos = new FileOutputStream(dest);
+            fos.write(imageByte);
+            if (fos != null) {
+                fos.close();
+            }
+            taskSubmitedDetail.setImage(fileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Task result = taskService.saveTask(taskSubmitedDetail);
+        if (result != null) {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/api/v1/task/{id}/modify", method = RequestMethod.PUT)
+    public ResponseEntity<Object> modifyPendingTaskForUser(@PathVariable("id") Long taskId,
+                                                    @RequestBody ModifiedTaskDTO taskModifyDto) {
+        Task taskModified = taskService.getTaskByTaskID(taskId);
+        if (taskModified == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        taskModified.setName(taskModifyDto.getName());
+        taskModified.setDescription(taskModifyDto.getDescription());
+        taskModified.setContentProcess(taskModifyDto.getProcess());
+        Date startDate, endDate;
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        try {
+            startDate = sdf.parse(taskModifyDto.getStartDate());
+            endDate = sdf.parse(taskModifyDto.getEndDate());
+        } catch (Exception e) {
+            String errorMsg = "Cannot parse start date and end date. Please check again";
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("message", errorMsg);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
+        }
+        taskModified.setStartDate(startDate);
+        taskModified.setEndDate(endDate);
+        taskModified.setTaskStatus(taskModifyDto.getStatus());
+        taskModified.setLastModified(new Date());
+        Task result = taskService.saveTask(taskModified);
+        if (result != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 }

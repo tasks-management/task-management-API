@@ -32,6 +32,9 @@ public class User implements Serializable {
     @Column(name = "is_active")
     private boolean isActive;
 
+    @Column(name = "token")
+    private String firebaseToken;
+
     @ManyToOne(targetEntity = Team.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id")
     private Team team;
