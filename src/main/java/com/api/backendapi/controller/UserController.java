@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -277,5 +276,29 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(userService.getAllUserInTeam(userId), HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/api/v1/user/list/users", method = RequestMethod.GET)
+    public ResponseEntity<Object> getAllUserForAdmin() {
+        List<User> listManagers = userService.getAllManagerUser();
+        List<User> result = userService.getAllAdminUsers();
+        if (listManagers.size() != 0) {
+            for (User manager : listManagers) {
+                result.add(manager);
+            }
+        }
+        List<User> listUserInTeam;
+        if (result.size() != 0) {
+            for (User manager: listManagers) {
+                listUserInTeam = userService.getAllUserInTeam(manager.getId());
+                if (listUserInTeam.size() != 0) {
+                    for (User user: listUserInTeam) {
+                        result.add(user);
+                    }
+                }
+            }
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

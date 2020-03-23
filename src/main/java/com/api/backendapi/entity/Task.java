@@ -56,7 +56,7 @@ public class Task implements Serializable {
     @JoinColumn(name = "creator_id", columnDefinition = "bigint")
     private User creatorId;
 
-    @Column(name = "image")
+    @Column(name = "imageBase64String")
     private String image;
 
     @ManyToOne(targetEntity = User.class)

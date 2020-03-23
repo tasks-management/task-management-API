@@ -1,13 +1,16 @@
 package com.api.backendapi.service;
 
+import com.api.backendapi.config.AppConfig;
 import com.api.backendapi.dtos.CreateTaskDTO;
 import com.api.backendapi.entity.Task;
 import com.api.backendapi.repository.TaskRepository;
 import com.api.backendapi.service.iservice.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +22,25 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> getHistoryTask(Long id) {
-        return taskRepository.getHistoryTask(id);
+        List<Task> result = taskRepository.getHistoryTask(id);
+        if (result.size() != 0) {
+            for (Task task : result) {
+                if (task.getImage() != null) {
+                    try {
+                        File userDirectory = new File("images");
+                        if (userDirectory.exists()) {
+                            String filePath = userDirectory.getAbsolutePath() + "\\";
+                            String fileNamePath = filePath + task.getImage();
+                            String imageBase64String = AppConfig.encodeImageToBase64String(fileNamePath);
+                            task.setImage(imageBase64String);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     // NOTE
@@ -30,17 +51,71 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> getHistoryByDate(Long id, Date start, Date end) {
-        return taskRepository.getHistoryTaskByDate(id, start, end);
+        List<Task> result = taskRepository.getHistoryTaskByDate(id, start, end);
+        if (result.size() != 0) {
+            for (Task task : result) {
+                if (task.getImage() != null) {
+                    try {
+                        File userDirectory = new File("images");
+                        if (userDirectory.exists()) {
+                            String filePath = userDirectory.getAbsolutePath() + "\\";
+                            String fileNamePath = filePath + task.getImage();
+                            String imageBase64String = AppConfig.encodeImageToBase64String(fileNamePath);
+                            task.setImage(imageBase64String);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     @Override
     public List<Task> getHistoryByStatus(Long id, String status) {
-        return taskRepository.getHistoryByStatus(id, status);
+        List<Task> result = taskRepository.getHistoryByStatus(id, status);
+        if (result.size() != 0) {
+            for (Task task : result) {
+                if (task.getImage() != null) {
+                    try {
+                        File userDirectory = new File("images");
+                        if (userDirectory.exists()) {
+                            String filePath = userDirectory.getAbsolutePath() + "\\";
+                            String fileNamePath = filePath + task.getImage();
+                            String imageBase64String = AppConfig.encodeImageToBase64String(fileNamePath);
+                            task.setImage(imageBase64String);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     @Override
     public List<Task> getHistoryByUserId(Long id, Date startDate, Date endDate, String status) {
-        return taskRepository.getHistoryByUserId(id, status, startDate, endDate);
+        List<Task> result = taskRepository.getHistoryByUserId(id, status, startDate, endDate);
+        if (result.size() != 0) {
+            for (Task task : result) {
+                if (task.getImage() != null) {
+                    try {
+                        File userDirectory = new File("images");
+                        if (userDirectory.exists()) {
+                            String filePath = userDirectory.getAbsolutePath() + "\\";
+                            String fileNamePath = filePath + task.getImage();
+                            String imageBase64String = AppConfig.encodeImageToBase64String(fileNamePath);
+                            task.setImage(imageBase64String);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     @Override
@@ -55,7 +130,23 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> getAllSubmitedTaskForManager(Long userId) {
-        return taskRepository.getAllSubmitedTaskForManager(userId);
+        List<Task> result = taskRepository.getAllSubmitedTaskForManager(userId);
+        for (Task task: result) {
+            if (task.getImage() != null) {
+                try {
+                    File userDirectory = new File("images");
+                    if (userDirectory.exists()) {
+                        String filePath = userDirectory.getAbsolutePath() + "\\";
+                        String fileNamePath = filePath + task.getImage();
+                        String imageBase64String = AppConfig.encodeImageToBase64String(fileNamePath);
+                        task.setImage(imageBase64String);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
     }
 
     @Override
