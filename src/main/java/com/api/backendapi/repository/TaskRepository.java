@@ -33,7 +33,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> getHistoryByStatus(@Param("id") Long id,
                                   @Param("status") String status);
 
-    @Query(value = "SELECT t* FROM tbl_tasks t WHERE t.handler_id = :id" +
+    @Query(value = "SELECT t.* FROM tbl_tasks t WHERE t.handler_id = :id" +
             " AND t.status = :status" +
             " AND t.start_date >= :start AND t.end_date <= :end ", nativeQuery = true)
     List<Task> getHistoryByUserId(@Param("id") Long id,

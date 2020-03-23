@@ -272,7 +272,7 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/api/v1/user/{id:\\d+}/users", method = RequestMethod.GET)
-    public ResponseEntity<Object> getAllUserInTeam(@PathVariable("id") Long userId) {
+    public ResponseEntity<Object> getAllUserInTeamByManagerID(@PathVariable("id") Long userId) {
         if (userId == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

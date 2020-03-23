@@ -90,11 +90,6 @@ public class TaskController {
     @RequestMapping(value = "/api/v1/task/{id}/submitTasks", method = RequestMethod.GET)
     public ResponseEntity<Object> getAllSubmitedTaskForManager(@PathVariable("id") Long userId) {
         List<Task> result = taskService.getAllSubmitedTaskForManager(userId);
-        if (result.size() == 0) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("message", "Don't have any submitted task");
-            return ResponseEntity.status(HttpStatus.OK).body(jsonObject.toString());
-        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -104,11 +99,6 @@ public class TaskController {
     @RequestMapping(value = "/api/v1/task/{id}/pendingTasks", method = RequestMethod.GET)
     public ResponseEntity<Object> getAllPendingTaskForManager(@PathVariable("id") Long userId) {
         List<Task> result = taskService.getAllPendingTaskForManager(userId);
-        if (result.size() == 0) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("message", "Don't have any pending task");
-            return ResponseEntity.status(HttpStatus.OK).body(jsonObject.toString());
-        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
